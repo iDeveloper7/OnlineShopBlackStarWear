@@ -10,7 +10,7 @@ import Alamofire
 
 class CategoriesLoader{
     func loadCategories(completion: @escaping ([Category]) -> Void){
-        AF.request("http://blackstarshop.ru/index.php?route=api/v1/categories").responseJSON { (response) in
+        AF.request(Urls.urlCategory()).responseJSON { (response) in
             if let objects = response.value,
             let jsonDict = objects as? NSDictionary{
                 var categories = [Category]()

@@ -27,10 +27,9 @@ extension SubCategoryesVC: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SubCategCell") as! SubCategoryCell
-        let webSite = "http://blackstarshop.ru/"
 
         if !subCategoryes[indexPath.row].iconImage.isEmpty,
-            let url = URL(string: "\(webSite)\(subCategoryes[indexPath.row].iconImage)"),
+           let url = URL(string: "\(Urls.url())\(subCategoryes[indexPath.row].iconImage)"),
             let data = try? Data(contentsOf: url){
             cell.imageMain.image = UIImage(data: data)
         } else if subCategoryes[indexPath.row].iconImage.isEmpty{
@@ -42,5 +41,17 @@ extension SubCategoryesVC: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let cell = tableView.cellForRow(at: indexPath)
+        performSegue(withIdentifier: "ShowProduct", sender: cell)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowProduct",
+           let destination = segue.destination as? ProductVC,
+           let cell = sender as? SubCategoryCell,
+           let indexPath = tableView.indexPath(for: cell){
+            destination.productId = subCategoryes[indexPath.row].id
+            destination.nameProduct = subCategoryes[indexPath.row].name
+        }
     }
 }

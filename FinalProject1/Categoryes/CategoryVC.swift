@@ -14,6 +14,7 @@ class CategoryVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Каталог"
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -32,10 +33,9 @@ extension CategoryVC: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! CategoryCell
-        let webSite = "http://blackstarshop.ru/"
         
         if !self.categories[indexPath.row].image.isEmpty,
-            let url = URL(string: "\(webSite)\(self.categories[indexPath.row].image)"),
+           let url = URL(string: "\(Urls.url())\(self.categories[indexPath.row].image)"),
             let data = try? Data(contentsOf: url){
             cell.imageMain.image = UIImage(data: data)
         } else if self.categories[indexPath.row].image.isEmpty{
