@@ -17,6 +17,7 @@ class ProductVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.title = nameProduct
         ProductLoader().loadProducts(url: Urls.urlProducts(id: productId), completion: { (product) in
             self.product = product
@@ -45,5 +46,20 @@ extension ProductVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegat
         cell.priceLabel.text = "\(Int(product[indexPath.row].price)) ₽"
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+        let item = collectionView.cellForItem(at: indexPath)
+        performSegue(withIdentifier: "ShowProductCard", sender: item)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowProductCard",
+           let destination = segue.destination as? ProductCardVC,
+           let item = sender as? ProductCell,
+           let indexPath = collectionView.indexPath(for: item){
+            destination.dataProduct = product[indexPath.item]
+        }
     }
 }

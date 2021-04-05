@@ -63,7 +63,7 @@ class Product{
 //    let colorName: String
 //    let colorImageURL: String
     let mainImage: String
-//    let productImages: [ProductImages]
+    let productImages: [ProductImages]
 //    let offers: [NSDictionary]
 //    let recommendedProductIDs: [String]
     let price: Double
@@ -77,19 +77,19 @@ class Product{
 //        let colorName = data["colorName"] as? String,
 //        let colorImageURL = data["colorImageURL"] as? String,
         let mainImage = data["mainImage"] as? String,
-//        let productImages = data["productImages"] as? [NSDictionary],
+        let productImages = data["productImages"] as? [NSDictionary],
 //        let offers = data["offers"] as? [NSDictionary],
 //        let recommendedProductIDs = data["recommendedProductIDs"] as? String,
         let price = data["price"] as? String else { return nil }
 //        let oldPrice = data["oldPrice"] as? String,
 //        let tag = data["tag"] as? String else { return nil }
         
-//        var prodImg = [ProductImages]()
-//        for image in productImages {
-//            if let productImg = ProductImages(data: image){
-//                prodImg.append(productImg)
-//            }
-//        }
+        var prodImg = [ProductImages]()
+        for image in productImages {
+            if let productImg = ProductImages(data: image){
+                prodImg.append(productImg)
+            }
+        }
         self.name = name
         self.sortOrder = Int(sortOrder) ?? 0
 //        self.article = article
@@ -97,7 +97,7 @@ class Product{
 //        self.colorName = colorName
 //        self.colorImageURL = colorImageURL
         self.mainImage = mainImage
-//        self.productImages = prodImg
+        self.productImages = prodImg
 //        self.offers = offers
 //        self.recommendedProductIDs = [recommendedProductIDs]
         self.price = Double(price) ?? 0
