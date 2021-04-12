@@ -59,7 +59,7 @@ class Product{
     let name: String
     let sortOrder: Int
 //    let article: String
-//    let description: String
+    let description: String
 //    let colorName: String
 //    let colorImageURL: String
     let mainImage: String
@@ -73,7 +73,7 @@ class Product{
         guard let name = data["name"] as? String,
         let sortOrder = data["sortOrder"] as? String,
 //        let article = data["article"] as? String,
-//        let description = data["description"] as? String,
+        let description = data["description"] as? String,
 //        let colorName = data["colorName"] as? String,
 //        let colorImageURL = data["colorImageURL"] as? String,
         let mainImage = data["mainImage"] as? String,
@@ -93,7 +93,7 @@ class Product{
         self.name = name
         self.sortOrder = Int(sortOrder) ?? 0
 //        self.article = article
-//        self.description = description
+        self.description = description
 //        self.colorName = colorName
 //        self.colorImageURL = colorImageURL
         self.mainImage = mainImage

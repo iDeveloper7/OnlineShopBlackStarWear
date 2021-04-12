@@ -9,8 +9,8 @@ import UIKit
 
 class ProductCardCell: UICollectionViewCell {
     
-    @IBOutlet weak var productCardImageView: UIImageView!
-
+    @IBOutlet weak var productCardImageView: UIImageView!    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
