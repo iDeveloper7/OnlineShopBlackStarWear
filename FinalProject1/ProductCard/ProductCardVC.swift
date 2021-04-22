@@ -15,7 +15,9 @@ class ProductCardVC: UIViewController {
     @IBOutlet weak var addToCardButtonOutlet: UIButton!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var myPageControl: UIPageControl!
-        
+    @IBOutlet weak var transparentView: UIView!
+    
+    var tableView = UITableView()
     var dataProduct: Product!
     
     override func viewDidLoad() {
@@ -24,11 +26,39 @@ class ProductCardVC: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         addToCardButtonOutlet.layer.cornerRadius = addToCardButtonOutlet.frame.height / 2.5
         myPageControl.numberOfPages = dataProduct.productImages.count
+        tableViewSettings()
+    }
+    //MARK: - create cart button кнопка "Добавить в корзину"
+    @IBAction func addToCartButtonAction(_ sender: UIButton) {
+        transparentView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        
+        //добалвяем всплывающее окно с размерами одежды
+        tableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 200)
+        view.addSubview(tableView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickTransparentView))
+        transparentView.addGestureRecognizer(tapGesture)
+        transparentView.alpha = 0
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
+            self.transparentView.alpha = 0.5
+            self.tableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - 200, width: UIScreen.main.bounds.size.width, height: 200)
+        }, completion: nil)
     }
     
-    @IBAction func addToCartButtonAction(_ sender: UIButton) {
-        
+    @objc func onClickTransparentView(){
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
+            self.transparentView.alpha = 0
+            self.tableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 200)
+        }, completion: nil)
     }
+    //Настройки table view всплывающего окна с размерами
+    func tableViewSettings(){
+        tableView.isScrollEnabled = true
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(SizeAndColorTableViewCell.self, forCellReuseIdentifier: "Cell")
+    }
+    
     //MARK: - create back button
     func createBackButton(){
         let backButton = UIButton(type: .roundedRect)
@@ -40,10 +70,36 @@ class ProductCardVC: UIViewController {
     @objc func backActionButton(sender: UIButton){
         dismiss(animated: true, completion: nil)
     }
-    //MARK: - create 
 }
-
-extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate{
+    //MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        dataProduct.offers.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SizeAndColorTableViewCell
+        cell.colorLabel.text = dataProduct.colorName
+        let euSize = dataProduct.offers[indexPath.row].size
+        let rusSize = SizeConverter[euSize]
+        if let size = rusSize{
+            cell.sizeLabel.text = "\(size) RUS \(euSize)"
+        } else{
+            cell.sizeLabel.text = euSize
+        }
+        return cell
+    }
+    //MARK: - UITableViewDelegate
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let cell = tableView.cellForRow(at: indexPath) as! SizeAndColorTableViewCell
+        cell.imageCheck.image = UIImage(named: "check")
+    }
+    
     //MARK: - collection view data source
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataProduct.productImages.isEmpty ? 0 : dataProduct.productImages.count
@@ -70,7 +126,7 @@ extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlo
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    //when the scrolling movement stops, we update the page control
+    //когда движение прокрутки картинки останавливается, мы обновляем (перелистываем) pageControl
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         myPageControl.currentPage = Int(scrollView.contentOffset.x) / Int(scrollView.frame.width)
     }

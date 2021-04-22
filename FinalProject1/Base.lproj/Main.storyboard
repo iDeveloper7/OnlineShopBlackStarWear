@@ -292,7 +292,7 @@
             <objects>
                 <viewController storyboardIdentifier="ProductCardSB" modalPresentationStyle="currentContext" id="wOT-1u-Y6k" customClass="ProductCardVC" customModule="FinalProject1" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Y2o-6g-V0O">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="814.5"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="814"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="Dag-5R-qLY">
@@ -441,14 +441,22 @@
                                     <constraint firstItem="4Db-67-6vu" firstAttribute="top" secondItem="Snx-UI-f5h" secondAttribute="bottom" id="zca-QD-tNz"/>
                                 </constraints>
                             </scrollView>
+                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jD0-as-13t">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="814.5"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Hp5-eG-Y7Q"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Dag-5R-qLY" firstAttribute="bottom" secondItem="Hp5-eG-Y7Q" secondAttribute="bottom" id="8SP-wC-QVI"/>
+                            <constraint firstItem="jD0-as-13t" firstAttribute="trailing" secondItem="Hp5-eG-Y7Q" secondAttribute="trailing" id="90z-hC-CES"/>
+                            <constraint firstItem="jD0-as-13t" firstAttribute="leading" secondItem="Hp5-eG-Y7Q" secondAttribute="leading" id="A8y-yD-Lio"/>
+                            <constraint firstItem="Hp5-eG-Y7Q" firstAttribute="bottom" secondItem="jD0-as-13t" secondAttribute="bottom" id="Wx6-r2-tJo"/>
                             <constraint firstItem="Dag-5R-qLY" firstAttribute="trailing" secondItem="Hp5-eG-Y7Q" secondAttribute="trailing" id="Zav-ak-0bP"/>
                             <constraint firstItem="Dag-5R-qLY" firstAttribute="top" secondItem="Y2o-6g-V0O" secondAttribute="top" id="cIP-CM-uF1"/>
                             <constraint firstItem="Dag-5R-qLY" firstAttribute="leading" secondItem="Hp5-eG-Y7Q" secondAttribute="leading" id="eir-si-s3b"/>
+                            <constraint firstItem="jD0-as-13t" firstAttribute="top" secondItem="Y2o-6g-V0O" secondAttribute="top" id="gFQ-Q0-gev"/>
                             <constraint firstItem="Snx-UI-f5h" firstAttribute="width" secondItem="Y2o-6g-V0O" secondAttribute="width" id="tLe-54-3VT"/>
                         </constraints>
                     </view>
@@ -460,11 +468,12 @@
                         <outlet property="myPageControl" destination="tjk-Ky-YEK" id="C0a-ZO-V2N"/>
                         <outlet property="nameLabel" destination="1Be-YE-8Nj" id="Ia3-sl-BO2"/>
                         <outlet property="priceLabel" destination="VdI-Kn-rS2" id="ABG-Yu-MXK"/>
+                        <outlet property="transparentView" destination="jD0-as-13t" id="7fK-ZX-8YN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vgn-DO-gVL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3748" y="-479.46026986506752"/>
+            <point key="canvasLocation" x="3748" y="-479.91004497751129"/>
         </scene>
     </scenes>
     <resources>

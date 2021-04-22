@@ -19,6 +19,7 @@ class ProductVC: UIViewController {
         super.viewDidLoad()
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.title = nameProduct
+        print(productId)
         ProductLoader().loadProducts(url: Urls.urlProducts(id: productId), completion: { (product) in
             self.product = product
             self.collectionView.reloadData()
