@@ -25,7 +25,7 @@ class SizeAndColorTableViewCell: UITableViewCell {
     }()
     
     lazy var sizeLabel: UILabel = {
-       let sizeLabel = UILabel(frame: CGRect(x: 180, y: 15, width: 100, height: 40))
+       let sizeLabel = UILabel(frame: CGRect(x: 180, y: 15, width: 150, height: 40))
         return sizeLabel
     }()
 

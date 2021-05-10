@@ -19,6 +19,8 @@ class ProductCardVC: UIViewController {
     
     var tableView = UITableView()
     var dataProduct: Product!
+    let cartButton = UIButton(type: .roundedRect)
+    var numberOfProducts = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,13 +29,14 @@ class ProductCardVC: UIViewController {
         addToCardButtonOutlet.layer.cornerRadius = addToCardButtonOutlet.frame.height / 2.5
         myPageControl.numberOfPages = dataProduct.productImages.count
         tableViewSettings()
+        createCartButton()
     }
-    //MARK: - create cart button кнопка "Добавить в корзину"
+    
+    //MARK: - create button add to cart  кнопка "Добавить в корзину"
     @IBAction func addToCartButtonAction(_ sender: UIButton) {
         transparentView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         
         //добалвяем всплывающее окно с размерами одежды
-        tableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 200)
         view.addSubview(tableView)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickTransparentView))
@@ -44,31 +47,44 @@ class ProductCardVC: UIViewController {
             self.tableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height - 200, width: UIScreen.main.bounds.size.width, height: 200)
         }, completion: nil)
     }
-    
+    //скрываем всплывающее окно с размерами одежды
     @objc func onClickTransparentView(){
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0.1, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
             self.transparentView.alpha = 0
             self.tableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 200)
         }, completion: nil)
     }
     //Настройки table view всплывающего окна с размерами
     func tableViewSettings(){
+        tableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 200)
         tableView.isScrollEnabled = true
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SizeAndColorTableViewCell.self, forCellReuseIdentifier: "Cell")
     }
     
-    //MARK: - create back button
+    //MARK: - create back button Создаем кнопку возврата в предыдущее меню
     func createBackButton(){
         let backButton = UIButton(type: .roundedRect)
-        backButton.frame = CGRect(x: 10, y: 40, width: 20, height: 20)
+        backButton.frame = CGRect(x: 5, y: 30, width: 20, height: 20)
         backButton.setBackgroundImage(UIImage(named: "backImage"), for: .normal)
         backButton.addTarget(self, action: #selector(backActionButton), for: .touchUpInside)
         view.addSubview(backButton)
     }
     @objc func backActionButton(sender: UIButton){
         dismiss(animated: true, completion: nil)
+    }
+    
+    //MARK: - create button cart Создаем кнопку "Корзина" (по дефолту)
+    func createCartButton(){
+        cartButton.frame = CGRect(x: UIScreen.main.bounds.width - 35, y: 28, width: 25, height: 25)
+        cartButton.setBackgroundImage(UIImage(named: "shopping-cart"), for: .normal)
+        view.addSubview(cartButton)
+        cartButton.addTarget(self, action: #selector(actionCartButton), for: .touchUpInside)
+    }
+    
+    @objc func actionCartButton(){
+        performSegue(withIdentifier: "CartVC", sender: nil)
     }
 }
 extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate{
@@ -98,6 +114,7 @@ extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlo
         tableView.deselectRow(at: indexPath, animated: true)
         let cell = tableView.cellForRow(at: indexPath) as! SizeAndColorTableViewCell
         cell.imageCheck.image = UIImage(named: "check")
+        onClickTransparentView() //убираем таблицу c выбором размеров
     }
     
     //MARK: - collection view data source
