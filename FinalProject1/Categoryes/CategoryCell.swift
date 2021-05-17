@@ -9,7 +9,7 @@ import UIKit
 
 class CategoryCell: UITableViewCell {
     
-    @IBOutlet weak var imageMain: UIImageView!
+    @IBOutlet weak var imageMain: CustomImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    
 }
-

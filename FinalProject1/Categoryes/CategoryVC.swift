@@ -13,7 +13,6 @@ class CategoryVC: UIViewController {
     var categoriesId = [String]()
     var tableIndex = 0
     
-    
     @IBOutlet weak var backButtonOutlet: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
@@ -24,11 +23,11 @@ class CategoryVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-            CategoriesLoader().loadCategories { (categories, categoriesId) in
-                self.categories = categories
-                self.tableView.reloadData()
-                self.categoriesId = categoriesId
-            }
+        CategoriesLoader().loadCategories { (categories, categoriesId) in
+            self.categories = categories
+            self.tableView.reloadData()
+            self.categoriesId = categoriesId
+        }
         if tableIndex == 0{
             backButtonOutlet.isHidden = true
             backButtonOutlet.isEnabled = false
@@ -46,6 +45,7 @@ class CategoryVC: UIViewController {
 }
 
 extension CategoryVC: UITableViewDataSource, UITableViewDelegate{
+    //MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if !subCategoryes.isEmpty{
             return subCategoryes.count
@@ -60,9 +60,10 @@ extension CategoryVC: UITableViewDataSource, UITableViewDelegate{
         if tableIndex == 0{
             navigationItem.title = "Каталог"
             if !self.categories[indexPath.row].image.isEmpty,
-               let url = URL(string: "\(Urls.url())\(self.categories[indexPath.row].image)"),
-               let data = try? Data(contentsOf: url){
-                cell.imageMain.image = UIImage(data: data)
+               let url = URL(string: "\(Urls.url())\(self.categories[indexPath.row].image)"){
+                cell.imageMain.loadImage(from: url)
+                cell.nameLabel.text = categories[indexPath.row].name
+                return cell
             } else if self.categories[indexPath.row].image.isEmpty{
                 cell.imageMain.image = UIImage(named: "EmptyImage")
             }
@@ -70,9 +71,8 @@ extension CategoryVC: UITableViewDataSource, UITableViewDelegate{
             return cell
         } else{
             if !subCategoryes[indexPath.row].iconImage.isEmpty,
-               let url = URL(string: "\(Urls.url())\(subCategoryes[indexPath.row].iconImage)"),
-                let data = try? Data(contentsOf: url){
-                cell.imageMain.image = UIImage(data: data)
+               let url = URL(string: "\(Urls.url())\(subCategoryes[indexPath.row].iconImage)"){
+                cell.imageMain.loadImage(from: url)
             } else if subCategoryes[indexPath.row].iconImage.isEmpty{
                 cell.imageMain.image = UIImage(named: "EmptyImage")
             }
@@ -80,7 +80,7 @@ extension CategoryVC: UITableViewDataSource, UITableViewDelegate{
             return cell
         }
     }
-    
+    //MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if tableIndex == 0 && !categories[indexPath.row].subcategories.isEmpty{

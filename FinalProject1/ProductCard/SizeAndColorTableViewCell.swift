@@ -25,15 +25,15 @@ class SizeAndColorTableViewCell: UITableViewCell {
     }()
     
     lazy var sizeLabel: UILabel = {
-       let sizeLabel = UILabel(frame: CGRect(x: 180, y: 15, width: 150, height: 40))
+        let sizeLabel = UILabel(frame: CGRect(x: 180, y: 15, width: 150, height: 40))
         return sizeLabel
     }()
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         addSubview(backView)
@@ -42,5 +42,4 @@ class SizeAndColorTableViewCell: UITableViewCell {
         backView.addSubview(sizeLabel)
         // Configure the view for the selected state
     }
-
 }

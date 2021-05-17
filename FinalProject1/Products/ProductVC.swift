@@ -27,28 +27,28 @@ class ProductVC: UIViewController {
     }
 }
 extension ProductVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource{
+    //MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         let widthCell = UIScreen.main.bounds.width / 2 - 20
         return CGSize(width: widthCell, height: widthCell * 1.864)
     }
-    
+    //MARK: - UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        product.isEmpty ? 0 : product.count
+        return product.isEmpty ? 0 : product.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProductCell", for: indexPath) as! ProductCell
         
-        if let url = URL(string: "\(Urls.url())\(product[indexPath.row].mainImage)"),
-           let data = try? Data(contentsOf: url){
-            cell.imageView.image = UIImage(data: data)
+        if let url = URL(string: "\(Urls.url())\(product[indexPath.row].mainImage)"){
+            cell.imageView.loadImage(from: url)
         }
         cell.nameLabel.text = product[indexPath.row].name
         cell.priceLabel.text = "\(Int(product[indexPath.row].price)) ₽"
         
         return cell
     }
-    
+    //MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let item = collectionView.cellForItem(at: indexPath)

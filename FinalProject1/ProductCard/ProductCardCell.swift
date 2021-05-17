@@ -9,7 +9,7 @@ import UIKit
 
 class ProductCardCell: UICollectionViewCell {
     
-    @IBOutlet weak var productCardImageView: UIImageView!    
+    @IBOutlet weak var productCardImageView: CustomImageView!    
     
     override func awakeFromNib() {
         super.awakeFromNib()

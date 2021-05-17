@@ -13,7 +13,7 @@ class CategoriesLoader{
         DispatchQueue.global(qos: .utility).async {
             AF.request(Urls.urlCategory()).responseJSON { (response) in
                 if let objects = response.value,
-                let jsonDict = objects as? NSDictionary{
+                   let jsonDict = objects as? NSDictionary{
                     var categories = [Category]()
                     var categoriesId = [String]()
                     for (_, data) in jsonDict where data is NSDictionary{

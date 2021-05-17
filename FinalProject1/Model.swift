@@ -16,10 +16,10 @@ class Category{
     
     init?(data: NSDictionary) {
         guard let name = data["name"] as? String,
-        let image = data["image"] as? String,
-        let iconImage = data["iconImage"] as? String,
-        let sortOrder = data["sortOrder"] as? String,
-        let subcategories = data["subcategories"] as? [NSDictionary] else { return nil }
+              let image = data["image"] as? String,
+              let iconImage = data["iconImage"] as? String,
+              let sortOrder = data["sortOrder"] as? String,
+              let subcategories = data["subcategories"] as? [NSDictionary] else { return nil }
         var subCat = [Subcategory]()
         for data in subcategories{
             if let subCateg = Subcategory(data: data){
@@ -43,10 +43,10 @@ class Subcategory {
     
     init?(data: NSDictionary) {
         guard let id = data["id"] as? String,
-        let iconImage = data["iconImage"] as? String,
-        let sortOrder = data["sortOrder"] as? String,
-        let name = data["name"] as? String,
-        let type = data["type"] as? String else { return nil }
+              let iconImage = data["iconImage"] as? String,
+              let sortOrder = data["sortOrder"] as? String,
+              let name = data["name"] as? String,
+              let type = data["type"] as? String else { return nil }
         self.id = Int(id) ?? 0
         self.name = name
         self.iconImage = iconImage
@@ -58,31 +58,31 @@ class Subcategory {
 class Product{
     let name: String
     let sortOrder: Int
-//    let article: String
+    //    let article: String
     let description: String
     let colorName: String
-//    let colorImageURL: String
+    //    let colorImageURL: String
     let mainImage: String
     let productImages: [ProductImages]
     let offers: [Offers]
-//    let recommendedProductIDs: [String]
+    //    let recommendedProductIDs: [String]
     let price: Double
-//    let oldPrice: Int
-//    let tag: String
+    //    let oldPrice: Int
+    //    let tag: String
     init?(data: NSDictionary) {
         guard let name = data["name"] as? String,
-        let sortOrder = data["sortOrder"] as? String,
-//        let article = data["article"] as? String,
-        let description = data["description"] as? String,
-        let colorName = data["colorName"] as? String,
-//        let colorImageURL = data["colorImageURL"] as? String,
-        let mainImage = data["mainImage"] as? String,
-        let productImages = data["productImages"] as? [NSDictionary],
-        let offers = data["offers"] as? [NSDictionary],
-//        let recommendedProductIDs = data["recommendedProductIDs"] as? String,
-        let price = data["price"] as? String else { return nil }
-//        let oldPrice = data["oldPrice"] as? String,
-//        let tag = data["tag"] as? String else { return nil }
+              let sortOrder = data["sortOrder"] as? String,
+              //        let article = data["article"] as? String,
+              let description = data["description"] as? String,
+              let colorName = data["colorName"] as? String,
+              //        let colorImageURL = data["colorImageURL"] as? String,
+              let mainImage = data["mainImage"] as? String,
+              let productImages = data["productImages"] as? [NSDictionary],
+              let offers = data["offers"] as? [NSDictionary],
+              //        let recommendedProductIDs = data["recommendedProductIDs"] as? String,
+              let price = data["price"] as? String else { return nil }
+        //        let oldPrice = data["oldPrice"] as? String,
+        //        let tag = data["tag"] as? String else { return nil }
         
         var prodImg = [ProductImages]()
         for image in productImages {
@@ -100,17 +100,17 @@ class Product{
         
         self.name = name
         self.sortOrder = Int(sortOrder) ?? 0
-//        self.article = article
+        //        self.article = article
         self.description = description
         self.colorName = colorName
-//        self.colorImageURL = colorImageURL
+        //        self.colorImageURL = colorImageURL
         self.mainImage = mainImage
         self.productImages = prodImg
         self.offers = offer
-//        self.recommendedProductIDs = [recommendedProductIDs]
+        //        self.recommendedProductIDs = [recommendedProductIDs]
         self.price = Double(price) ?? 0
-//        self.oldPrice = Int(oldPrice) ?? 0
-//        self.tag = tag
+        //        self.oldPrice = Int(oldPrice) ?? 0
+        //        self.tag = tag
     }
 }
 
@@ -130,7 +130,7 @@ class ProductImages{
     let sortOrder: Int
     init?(data: NSDictionary){
         guard let imageURL = data["imageURL"] as? String,
-        let sortOrder = data["sortOrder"] as? String else { return nil }
+              let sortOrder = data["sortOrder"] as? String else { return nil }
         self.imageURL = imageURL
         self.sortOrder = Int(sortOrder) ?? 0
     }

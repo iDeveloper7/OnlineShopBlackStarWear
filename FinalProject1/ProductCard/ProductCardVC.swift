@@ -117,7 +117,7 @@ extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlo
         onClickTransparentView() //убираем таблицу c выбором размеров
     }
     
-    //MARK: - collection view data source
+    //MARK: - UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataProduct.productImages.isEmpty ? 0 : dataProduct.productImages.count
     }
@@ -125,9 +125,8 @@ extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProductCardCell", for: indexPath) as! ProductCardCell
         
-        if let url = URL(string: "\(Urls.url())\(dataProduct.productImages[indexPath.row].imageURL)"),
-           let data = try? Data(contentsOf: url){
-            cell.productCardImageView.image = UIImage(data: data)
+        if let url = URL(string: "\(Urls.url())\(dataProduct.productImages[indexPath.row].imageURL)"){
+            cell.productCardImageView.loadImage(from: url)
         }
         nameLabel.text = dataProduct.name
         priceLabel.text = "\(Int(dataProduct.price)) ₽"
