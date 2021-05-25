@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ProductCardVC: UIViewController {
     
@@ -84,7 +85,7 @@ class ProductCardVC: UIViewController {
     }
     
     @objc func actionCartButton(){
-        performSegue(withIdentifier: "CartVC", sender: nil)
+        performSegue(withIdentifier: "segueCart", sender: nil)
     }
 }
 extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate{
@@ -115,6 +116,15 @@ extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlo
         let cell = tableView.cellForRow(at: indexPath) as! SizeAndColorTableViewCell
         cell.imageCheck.image = UIImage(named: "check")
         onClickTransparentView() //убираем таблицу c выбором размеров
+        
+        let item = ProductData()
+        item.image = "\(Urls.url())\(dataProduct.mainImage)"
+        item.name = dataProduct.name
+        item.size = dataProduct.offers[indexPath.row].size
+        item.color = dataProduct.colorName
+        item.price = Int(dataProduct.price)
+        //сохраняем данные в реалм
+        Persistence.shared.save(item: item)
     }
     
     //MARK: - UICollectionViewDataSource
@@ -125,7 +135,7 @@ extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProductCardCell", for: indexPath) as! ProductCardCell
         
-        if let url = URL(string: "\(Urls.url())\(dataProduct.productImages[indexPath.row].imageURL)"){
+        if let url = URL(string: "\(Urls.url())\(dataProduct.productImages[indexPath.item].imageURL)"){
             cell.productCardImageView.loadImage(from: url)
         }
         nameLabel.text = dataProduct.name

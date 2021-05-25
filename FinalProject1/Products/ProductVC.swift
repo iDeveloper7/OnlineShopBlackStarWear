@@ -17,13 +17,18 @@ class ProductVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationItem.title = nameProduct
+        setupNavBar()
         print(productId)
         ProductLoader().loadProducts(url: Urls.urlProducts(id: productId), completion: { (product) in
             self.product = product
             self.collectionView.reloadData()
         })
+    }
+    
+    private func setupNavBar(){
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = .darkGray
+        navigationItem.title = nameProduct
     }
 }
 extension ProductVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource{
