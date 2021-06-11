@@ -21,7 +21,6 @@ class ProductCardVC: UIViewController {
     var tableView = UITableView()
     var dataProduct: Product!
     let cartButton = UIButton(type: .roundedRect)
-    var numberOfProducts = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +56,7 @@ class ProductCardVC: UIViewController {
     }
     //Настройки table view всплывающего окна с размерами
     func tableViewSettings(){
+        tableView.tableFooterView = UIView.init(frame: .zero)
         tableView.frame = CGRect(x: 0, y: UIScreen.main.bounds.size.height, width: UIScreen.main.bounds.size.width, height: 200)
         tableView.isScrollEnabled = true
         tableView.delegate = self
@@ -108,7 +108,7 @@ extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlo
     }
     //MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+        return 80
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

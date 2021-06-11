@@ -50,7 +50,6 @@ extension ProductVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegat
         }
         cell.nameLabel.text = product[indexPath.row].name
         cell.priceLabel.text = "\(Int(product[indexPath.row].price)) ₽"
-        
         return cell
     }
     //MARK: - UICollectionViewDelegate

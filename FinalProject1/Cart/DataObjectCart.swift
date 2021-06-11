@@ -31,7 +31,8 @@ class Persistence{
         return realm.objects(ProductData.self)
     }
     
-    func remove(item: ProductData){
+    func remove(index: Int){
+        let item = realm.objects(ProductData.self)[index]
         try! realm.write{
             realm.delete(item)
         }

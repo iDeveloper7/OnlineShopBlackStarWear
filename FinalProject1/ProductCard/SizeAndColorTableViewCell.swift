@@ -15,17 +15,17 @@ class SizeAndColorTableViewCell: UITableViewCell {
     }()
     
     lazy var colorLabel: UILabel = {
-        let colorLabel = UILabel(frame: CGRect(x: 10, y: 15, width: 130, height: 40))
+        let colorLabel = UILabel(frame: CGRect(x: 10, y: 15, width: 170, height: 40))
         return colorLabel
     }()
     
     lazy var imageCheck: UIImageView = {
-        let imageCheck = UIImageView(frame: CGRect(x: 150, y: 25, width: 20, height: 20))
+        let imageCheck = UIImageView(frame: CGRect(x: 190, y: 25, width: 20, height: 20))
         return imageCheck
     }()
     
     lazy var sizeLabel: UILabel = {
-        let sizeLabel = UILabel(frame: CGRect(x: 180, y: 15, width: 150, height: 40))
+        let sizeLabel = UILabel(frame: CGRect(x: 220, y: 15, width: 150, height: 40))
         return sizeLabel
     }()
     
