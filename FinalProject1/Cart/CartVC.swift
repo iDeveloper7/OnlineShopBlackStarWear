@@ -40,7 +40,6 @@ class CartVC: UIViewController {
     }
     
     private func settingPlaceButton(){
-        arrayItem.isEmpty ? self.placeAnOrderButtonOutlet.setTitle("НА ГЛАВНУЮ", for: .normal) : self.placeAnOrderButtonOutlet.setTitle("ОФОРМИТЬ ЗАКАЗ", for: .normal)
         placeAnOrderButtonOutlet.layer.cornerRadius = 20
     }
     
@@ -55,6 +54,7 @@ class CartVC: UIViewController {
             sum += price
         }
         totalPriceLabel.text = "\(sum) руб."
+        sum == 0 ? self.placeAnOrderButtonOutlet.setTitle("НА ГЛАВНУЮ", for: .normal) : self.placeAnOrderButtonOutlet.setTitle("ОФОРМИТЬ ЗАКАЗ", for: .normal)
     }
     //кнопка "Оформить заказ"
     @IBAction func placeAnOrderButton(_ sender: UIButton) {
@@ -129,9 +129,10 @@ extension CartVC: UITableViewDataSource, UITableViewDelegate, DeleteCellDelegate
     //MARK: -delegate
     func deleteItem(indexPath: IndexPath) {
         Persistence.shared.remove(index: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
+        tableView.deleteRows(at: [indexPath], with: .top)
         tableView.reloadData()
         print("delete \(indexPath.row)")
+        totalPrice()
         animateOutPopUp()
     }
     
