@@ -20,7 +20,8 @@ class ProductCardVC: UIViewController {
     
     var tableView = UITableView()
     var dataProduct: Product!
-    let cartButton = UIButton(type: .roundedRect)
+    let backButton = UIButton(type: .roundedRect) //кнопка "вернуться назад"
+    let cartButton = UIButton(type: .roundedRect) //кнопка "перейти в корзину"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,11 +67,14 @@ class ProductCardVC: UIViewController {
     
     //MARK: - create back button Создаем кнопку возврата в предыдущее меню
     func createBackButton(){
-        let backButton = UIButton(type: .roundedRect)
-        backButton.frame = CGRect(x: 5, y: 30, width: 20, height: 20)
         backButton.setBackgroundImage(UIImage(named: "backImage"), for: .normal)
         backButton.addTarget(self, action: #selector(backActionButton), for: .touchUpInside)
         view.addSubview(backButton)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 7).isActive = true
+        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 11).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        backButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
     }
     @objc func backActionButton(sender: UIButton){
         dismiss(animated: true, completion: nil)
@@ -78,10 +82,14 @@ class ProductCardVC: UIViewController {
     
     //MARK: - create button cart Создаем кнопку "Корзина" (по дефолту)
     func createCartButton(){
-        cartButton.frame = CGRect(x: UIScreen.main.bounds.width - 35, y: 28, width: 25, height: 25)
         cartButton.setBackgroundImage(UIImage(named: "shopping-cart"), for: .normal)
-        view.addSubview(cartButton)
         cartButton.addTarget(self, action: #selector(actionCartButton), for: .touchUpInside)
+        view.addSubview(cartButton)
+        cartButton.translatesAutoresizingMaskIntoConstraints = false
+        cartButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -7).isActive = true
+        cartButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor).isActive = true
+        cartButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        cartButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
     }
     
     @objc func actionCartButton(){

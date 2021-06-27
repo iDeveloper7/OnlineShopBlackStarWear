@@ -24,12 +24,14 @@ class Persistence{
     
     func save(item: ProductData){
         let array = Persistence.shared.getItems()
-        
+        //если элементы, которые уже находятся в БД равны элементам, которые мы собираемся сохранить
         if let index = array.firstIndex(where: {$0.image == item.image && $0.name == item.name && $0.size == item.size && $0.color == item.color}){
+            //то перезаписываем количество товара без сохранения нового элемента
             try! realm.write{
                 array[index].count += 1
             }
         } else {
+            //в ином случае, сохраняем новый элемент
             try! realm.write{
                 realm.add(item)
             }
@@ -41,7 +43,7 @@ class Persistence{
     }
     
     func remove(index: Int){
-        let item = realm.objects(ProductData.self)[index]
+        let item = Persistence.shared.getItems()[index]
         try! realm.write{
             realm.delete(item)
         }
