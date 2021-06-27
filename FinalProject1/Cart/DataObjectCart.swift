@@ -15,6 +15,7 @@ class ProductData: Object{
     dynamic var size = ""
     dynamic var color = ""
     dynamic var price = 0
+    dynamic var count = 1
 }
 
 class Persistence{
@@ -22,11 +23,19 @@ class Persistence{
     let realm = try! Realm()
     
     func save(item: ProductData){
-        try! realm.write{
-            realm.add(item)
+        let array = Persistence.shared.getItems()
+        
+        if let index = array.firstIndex(where: {$0.image == item.image && $0.name == item.name && $0.size == item.size && $0.color == item.color}){
+            try! realm.write{
+                array[index].count += 1
+            }
+        } else {
+            try! realm.write{
+                realm.add(item)
+            }
         }
     }
-    
+   
     func getItems() -> Results<ProductData>{
         return realm.objects(ProductData.self)
     }

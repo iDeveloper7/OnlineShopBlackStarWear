@@ -25,7 +25,6 @@ class CartVC: UIViewController {
     var delegate: DeleteItem?
     var indexPath: IndexPath?
     
-            
     override func viewDidLoad() {
         super.viewDidLoad()
         settingsTransparentView()
@@ -158,7 +157,7 @@ extension CartVC: UITableViewDataSource, UITableViewDelegate, DeleteCellDelegate
         cell.sizeLabel.text = "Размер: \(arrayItem[indexPath.row].size)"
         cell.colorLabel.text = "Цвет: \(arrayItem[indexPath.row].color)"
         cell.priceLabel.text = "\(arrayItem[indexPath.row].price) ₽"
-        cell.countLabel.text = "Количество: 1"
+        cell.countLabel.text = "Количество: \(arrayItem[indexPath.row].count)"
         cell.delegate = self
         cell.indexPath = indexPath
         return cell
