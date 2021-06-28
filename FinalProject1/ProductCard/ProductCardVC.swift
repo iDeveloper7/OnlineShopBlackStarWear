@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import BadgeSwift
 
 class ProductCardVC: UIViewController {
     
@@ -22,6 +23,8 @@ class ProductCardVC: UIViewController {
     var dataProduct: Product!
     let backButton = UIButton(type: .roundedRect) //кнопка "вернуться назад"
     let cartButton = UIButton(type: .roundedRect) //кнопка "перейти в корзину"
+    let badge = BadgeSwift()
+    var countItemInCart = 0 //кол-во товаров в корзине для badge
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +34,7 @@ class ProductCardVC: UIViewController {
         myPageControl.numberOfPages = dataProduct.productImages.count
         tableViewSettings()
         createCartButton()
+        createBadge()
     }
     
     //MARK: - create button add to cart  кнопка "Добавить в корзину"
@@ -71,29 +75,59 @@ class ProductCardVC: UIViewController {
         backButton.addTarget(self, action: #selector(backActionButton), for: .touchUpInside)
         view.addSubview(backButton)
         backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 7).isActive = true
-        backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 11).isActive = true
-        backButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        backButton.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        NSLayoutConstraint.activate([
+            backButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 7),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 11),
+            backButton.heightAnchor.constraint(equalToConstant: 20),
+            backButton.widthAnchor.constraint(equalToConstant: 20)
+        ])
+        
     }
     @objc func backActionButton(sender: UIButton){
         dismiss(animated: true, completion: nil)
     }
     
-    //MARK: - create button cart Создаем кнопку "Корзина" (по дефолту)
+    //MARK: - create button cart Создаем кнопку "Корзина"
     func createCartButton(){
         cartButton.setBackgroundImage(UIImage(named: "shopping-cart"), for: .normal)
         cartButton.addTarget(self, action: #selector(actionCartButton), for: .touchUpInside)
         view.addSubview(cartButton)
         cartButton.translatesAutoresizingMaskIntoConstraints = false
-        cartButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -7).isActive = true
-        cartButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor).isActive = true
-        cartButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        cartButton.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        NSLayoutConstraint.activate([
+            cartButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -17),
+            cartButton.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+            cartButton.widthAnchor.constraint(equalToConstant: 25),
+            cartButton.heightAnchor.constraint(equalToConstant: 25)
+        ])
     }
     
     @objc func actionCartButton(){
         performSegue(withIdentifier: "segueCart", sender: nil)
+    }
+    
+    //MARK: - create badge
+    func createBadge(){
+        //считаем кол-во товаров в корзине
+        for i in Persistence.shared.getItems(){
+            countItemInCart += i.count
+        }
+        //configuration badge
+        badge.text = "\(countItemInCart)"
+        badge.badgeColor = .systemRed
+        badge.textColor = .white
+        badge.textAlignment = .center
+        badge.clipsToBounds = true
+//        badge.minimumScaleFactor = 12
+        badge.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
+        view.addSubview(badge)
+        //position badge
+        badge.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            badge.topAnchor.constraint(equalTo: cartButton.topAnchor, constant: -10),
+            badge.rightAnchor.constraint(equalTo: cartButton.rightAnchor, constant: 10),
+            badge.widthAnchor.constraint(equalToConstant: 20),
+            badge.heightAnchor.constraint(equalToConstant: 20)
+        ])
     }
 }
 extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate{
@@ -131,8 +165,13 @@ extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlo
         item.size = dataProduct.offers[indexPath.row].size
         item.color = dataProduct.colorName
         item.price = Int(dataProduct.price)
+        
         //сохраняем данные в реалм
         Persistence.shared.save(item: item)
+        
+        //меняем цифру товаров в badge при нажатии на ячейкку таблицы с выбором размера и цвета
+        countItemInCart += 1
+        badge.text = "\(countItemInCart)"
     }
     
     //MARK: - UICollectionViewDataSource
