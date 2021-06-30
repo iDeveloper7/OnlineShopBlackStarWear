@@ -96,9 +96,20 @@
                                 </connections>
                             </button>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Item" style="plain" id="ecr-5C-bjw">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="J0f-Va-0CY">
+                                <rect key="frame" x="280" y="9.5" width="79" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="cart"/>
+                                <connections>
+                                    <action selector="goToCart:" destination="7gq-22-agb" eventType="touchUpInside" id="d8w-Ca-zze"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="backButtonOutlet" destination="nP4-gd-KmU" id="uIr-tQ-8Wl"/>
+                        <outlet property="cartButton" destination="J0f-Va-0CY" id="lqW-vJ-Y8I"/>
                         <outlet property="tableView" destination="BX8-na-TAC" id="lZM-t9-bCE"/>
                         <segue destination="qZE-cS-DG0" kind="show" identifier="segueProduct" id="4D2-cP-NV7"/>
                     </connections>
@@ -225,8 +236,20 @@
                             <constraint firstItem="LvV-gJ-fdw" firstAttribute="top" secondItem="S6G-pI-FCg" secondAttribute="top" id="s3Y-19-ofc"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Uj7-Gp-8Nz"/>
+                    <navigationItem key="navigationItem" id="Uj7-Gp-8Nz">
+                        <barButtonItem key="rightBarButtonItem" title="Item" style="plain" id="ubw-s2-Mrx">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="SOa-Oh-gAX">
+                                <rect key="frame" x="280" y="9.5" width="79" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="cart"/>
+                                <connections>
+                                    <action selector="goToCart:" destination="qZE-cS-DG0" eventType="touchUpInside" id="Uox-bI-r3a"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="cartButton" destination="SOa-Oh-gAX" id="yjI-fa-pzp"/>
                         <outlet property="collectionView" destination="LvV-gJ-fdw" id="N0j-cg-ahS"/>
                         <segue destination="wOT-1u-Y6k" kind="presentation" identifier="ShowProductCard" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="POE-x1-Txn"/>
                     </connections>
@@ -698,6 +721,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="cart" width="25" height="25"/>
         <image name="chevron.backward" catalog="system" width="96" height="128"/>
         <image name="delete" width="512" height="512"/>
         <image name="multiply" catalog="system" width="128" height="111"/>

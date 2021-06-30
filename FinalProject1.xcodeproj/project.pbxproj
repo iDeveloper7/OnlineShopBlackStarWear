@@ -140,6 +140,7 @@
 				9F071E392613AE64006E696D /* Urls.swift */,
 				9F1EA2D72631F61F00F99096 /* SizeConverter.swift */,
 				9F16D95B26516C30008CB048 /* CustomImageView.swift */,
+				9F10BC7A26543F4900870782 /* DataObjectCart.swift */,
 				9FA1BB7B266EAE6E00D5EE4A /* Model */,
 				9FEF5DDC26079A9200B30E92 /* Categoryes */,
 				9F071E372613A64C006E696D /* Products */,
@@ -167,7 +168,6 @@
 			isa = PBXGroup;
 			children = (
 				9F165620263470C300ABA2AE /* CartVC.swift */,
-				9F10BC7A26543F4900870782 /* DataObjectCart.swift */,
 				9FF569092652E66400B7FCAD /* CartCell.swift */,
 			);
 			path = Cart;

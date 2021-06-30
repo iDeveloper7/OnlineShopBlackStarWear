@@ -12,12 +12,16 @@ class ProductVC: UIViewController {
     var nameProduct = ""
     var productId = 0
     var product = [Product]()
+    var countBadge = 0 //значение (число) badge
+    var badgeCount = UILabel()
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var cartButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
+        badgeLabel()
         print(productId)
         ProductLoader().loadProducts(url: Urls.urlProducts(id: productId), completion: { (product) in
             self.product = product
@@ -26,9 +30,43 @@ class ProductVC: UIViewController {
     }
     
     private func setupNavBar(){
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        navigationItem.rightBarButtonItems?.append(UIBarButtonItem(customView: cartButton))
         navigationController?.navigationBar.tintColor = .darkGray
         navigationItem.title = nameProduct
+    }
+
+    //MARK: - create badge
+    private func badgeLabel(){
+        badgeCount = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        badgeCount.layer.cornerRadius = badgeCount.frame.size.width / 2
+        badgeCount.layer.masksToBounds = true
+        badgeCount.backgroundColor = .systemRed
+        badgeCount.textColor = .white
+        badgeCount.textAlignment = .center
+        badgeCount.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
+        for i in Persistence.shared.getItems(){
+            countBadge += i.count
+        }
+        if countBadge == 0{
+            badgeCount.isHidden = true
+        } else {
+            badgeCount.isHidden = false
+        }
+        badgeCount.text = "\(countBadge)"
+        badgeCount.translatesAutoresizingMaskIntoConstraints = false
+        cartButton.addSubview(badgeCount)
+        NSLayoutConstraint.activate([
+            badgeCount.topAnchor.constraint(equalTo: cartButton.topAnchor, constant: -7),
+            badgeCount.rightAnchor.constraint(equalTo: cartButton.rightAnchor, constant: 7),
+            badgeCount.widthAnchor.constraint(equalToConstant: 20),
+            badgeCount.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
+    //переход на экран корзины
+    @IBAction func goToCart(_ sender: UIButton) {
+        guard let vc = storyboard?.instantiateViewController(identifier: "CartVC") else { return }
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 extension ProductVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource{

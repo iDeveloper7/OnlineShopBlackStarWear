@@ -41,9 +41,10 @@ class CartVC: UIViewController {
     private func settingPlaceButton(){
         placeAnOrderButtonOutlet.layer.cornerRadius = 20
     }
-    
+    //возвращаемся на предыдущий экран
     @IBAction func actionCancelButton(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
     //считаем сумму корзины
     private func totalPrice(){

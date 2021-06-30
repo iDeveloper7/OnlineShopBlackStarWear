@@ -12,13 +12,45 @@ class CategoryVC: UIViewController {
     var subCategoryes = [Subcategory]()
     var categoriesId = [String]()
     var tableIndex = 0
+    var countBadge = 0 //значение (число) badge
+    var badgeCount = UILabel()
     
     @IBOutlet weak var backButtonOutlet: UIButton!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var cartButton: UIButton!
+    
+    //MARK: - create badge
+    private func badgeLabel(){
+        badgeCount = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        badgeCount.layer.cornerRadius = badgeCount.frame.size.width / 2
+        badgeCount.layer.masksToBounds = true
+        badgeCount.backgroundColor = .systemRed
+        badgeCount.textColor = .white
+        badgeCount.textAlignment = .center
+        badgeCount.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
+        for i in Persistence.shared.getItems(){
+            countBadge += i.count
+        }
+        if countBadge == 0{
+            badgeCount.isHidden = true
+        } else {
+            badgeCount.isHidden = false
+        }
+        badgeCount.text = "\(countBadge)"
+        badgeCount.translatesAutoresizingMaskIntoConstraints = false
+        cartButton.addSubview(badgeCount)
+        NSLayoutConstraint.activate([
+            badgeCount.topAnchor.constraint(equalTo: cartButton.topAnchor, constant: -7),
+            badgeCount.rightAnchor.constraint(equalTo: cartButton.rightAnchor, constant: 7),
+            badgeCount.widthAnchor.constraint(equalToConstant: 20),
+            badgeCount.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        setupNavBar()
+        badgeLabel()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -32,9 +64,20 @@ class CategoryVC: UIViewController {
             backButtonOutlet.isHidden = true
             backButtonOutlet.isEnabled = false
         }
-        backButtonOutlet.setTitle("", for: .normal)
+    }
+    //settings navigation bar
+    private func setupNavBar(){
+        navigationItem.rightBarButtonItems?.append(UIBarButtonItem(customView: cartButton))
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = .darkGray
+    }
+    //переход на экран корзины
+    @IBAction func goToCart(_ sender: UIButton) {
+        guard let vc = storyboard?.instantiateViewController(identifier: "CartVC") else { return }
+        navigationController?.pushViewController(vc, animated: true)
     }
     
+    //вернуться назад
     @IBAction func backButtonAction(_ sender: UIButton) {
         backButtonOutlet.isHidden = true
         backButtonOutlet.isEnabled = false
@@ -47,11 +90,7 @@ class CategoryVC: UIViewController {
 extension CategoryVC: UITableViewDataSource, UITableViewDelegate{
     //MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if !subCategoryes.isEmpty{
-            return subCategoryes.count
-        } else {
-            return categories.count
-        }
+        return !subCategoryes.isEmpty ? subCategoryes.count : categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
