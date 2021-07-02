@@ -11,6 +11,14 @@ protocol DeleteItem: NSObjectProtocol {
     func deleteItem(indexPath: IndexPath)
 }
 
+protocol CountItemBadgeDelegate{
+    func countItemBadgeDelegate(count: Int)
+}
+
+protocol CountItemBadgeInZero{
+    func countItemBadgeInZero(count: Int)
+}
+
 class CartVC: UIViewController {
     
     @IBOutlet weak var placeAnOrderButtonOutlet: UIButton!
@@ -20,13 +28,45 @@ class CartVC: UIViewController {
     @IBOutlet weak var yesButton: UIButton!
     @IBOutlet weak var noButton: UIButton!
     @IBOutlet weak var popUpView: UIView!
-    var arrayItem = Persistence.shared.getItems()
+    @IBOutlet weak var cartLabel: UILabel!
     
+    var arrayItem = Persistence.shared.getItems()
     var delegate: DeleteItem?
     var indexPath: IndexPath?
+    var countItemDelegate: CountItemBadgeDelegate?
+    var countItemZeroDelegate: CountItemBadgeInZero?
+    let backButton = UIButton(type: .roundedRect)
+    
+    //MARK: - create back button
+    func createBackButton(){
+        backButton.setBackgroundImage(UIImage(named: "cancel"), for: .normal)
+        backButton.addTarget(self, action: #selector(actionCancelButton), for: .touchUpInside)
+        view.addSubview(backButton)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backButton.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 11),
+            backButton.centerYAnchor.constraint(equalTo: cartLabel.centerYAnchor),
+            backButton.widthAnchor.constraint(equalToConstant: 20),
+            backButton.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
+    
+    @objc func actionCancelButton(){
+        func countBadge() -> Int{
+           var count = 0
+           for i in Persistence.shared.getItems(){
+               count += i.count
+           }
+           return count
+       }
+        countItemDelegate?.countItemBadgeDelegate(count: countBadge())
+        dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        createBackButton()
         settingsTransparentView()
         tableView.tableFooterView = UIView.init(frame: .zero)
         settingPlaceButton()
@@ -41,11 +81,7 @@ class CartVC: UIViewController {
     private func settingPlaceButton(){
         placeAnOrderButtonOutlet.layer.cornerRadius = 20
     }
-    //возвращаемся на предыдущий экран
-    @IBAction func actionCancelButton(_ sender: UIBarButtonItem) {
-        dismiss(animated: true, completion: nil)
-        navigationController?.popViewController(animated: true)
-    }
+    
     //считаем сумму корзины
     private func totalPrice(){
         var sum = 0
@@ -61,15 +97,14 @@ class CartVC: UIViewController {
         if !arrayItem.isEmpty{
             let ac = UIAlertController(title: "Спасибо!", message: "Ваш заказ успешно оформлен", preferredStyle: .alert)
             let action = UIAlertAction(title: "Вернуться на главный экран", style: .default) { (action) in
-                guard let sb = self.storyboard?.instantiateViewController(identifier: "CategoryVC") else { return }
-                self.navigationController?.pushViewController(sb, animated: true)
                 Persistence.shared.removeAll()
+                self.countItemZeroDelegate?.countItemBadgeInZero(count: 0)
+                self.performSegue(withIdentifier: "unwind", sender: self)
             }
             ac.addAction(action)
             present(ac, animated: true, completion: nil)
         } else{
-            guard let sb = self.storyboard?.instantiateViewController(identifier: "CategoryVC") else { return }
-            self.navigationController?.pushViewController(sb, animated: true)
+            self.performSegue(withIdentifier: "unwind", sender: self)
         }
     }
     //всплывающая кнопка "Да" при удалении ячейки

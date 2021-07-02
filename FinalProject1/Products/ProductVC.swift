@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol CountBadgeProductVCDelegate{
+    func countBadgeProductVCDelegate(count: Int)
+}
+
 class ProductVC: UIViewController {
     
     var nameProduct = ""
@@ -14,6 +18,7 @@ class ProductVC: UIViewController {
     var product = [Product]()
     var countBadge = 0 //значение (число) badge
     var badgeCount = UILabel()
+    var countProductVCDelegate: CountBadgeProductVCDelegate?
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var cartButton: UIButton!
@@ -29,11 +34,24 @@ class ProductVC: UIViewController {
         })
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        badgeCount.text = "\(countBadge)"
+    }
+    
     private func setupNavBar(){
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         navigationItem.rightBarButtonItems?.append(UIBarButtonItem(customView: cartButton))
         navigationController?.navigationBar.tintColor = .darkGray
         navigationItem.title = nameProduct
+    }
+    
+    //при нажатии на кнопку "назад на предыдущий экран" мы передаем значение через делегат
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+        if parent == nil {
+            countProductVCDelegate?.countBadgeProductVCDelegate(count: countBadge)
+        }
     }
 
     //MARK: - create badge
@@ -65,11 +83,38 @@ class ProductVC: UIViewController {
     }
     //переход на экран корзины
     @IBAction func goToCart(_ sender: UIButton) {
-        guard let vc = storyboard?.instantiateViewController(identifier: "CartVC") else { return }
-        navigationController?.pushViewController(vc, animated: true)
+        let vc = storyboard?.instantiateViewController(identifier: "CartVC") as! CartVC
+        vc.countItemDelegate = self
+        vc.countItemZeroDelegate = self
+        present(vc, animated: true, completion: nil)
     }
 }
-extension ProductVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource{
+extension ProductVC: CountItemBadgeInZero, CountItemBadgeDelegate, CountBadgeDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource{
+    //MARK: - CountItemBadgeInZero (при покупке товаров в корзине)
+    func countItemBadgeInZero(count: Int) {
+        self.countBadge = count
+        badgeCount.isHidden = true
+    }
+    
+    //MARK: - count badge delegate
+    func countBadge(count: Int) {
+        self.countBadge = count
+        if count == 0{
+            badgeCount.isHidden = true
+        } else {
+            badgeCount.isHidden = false
+        }
+    }
+    //MARK: - CountItemBadgeDelegate (делегат из корзины)
+    func countItemBadgeDelegate(count: Int) {
+        self.countBadge = count
+        if count == 0{
+            badgeCount.isHidden = true
+        } else {
+            badgeCount.isHidden = false
+        }
+    }
+    
     //MARK: - UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         let widthCell = UIScreen.main.bounds.width / 2 - 20
@@ -103,6 +148,7 @@ extension ProductVC: UICollectionViewDelegateFlowLayout, UICollectionViewDelegat
            let item = sender as? ProductCell,
            let indexPath = collectionView.indexPath(for: item){
             destination.dataProduct = product[indexPath.item]
+            destination.countDelegate = self
         }
     }
 }

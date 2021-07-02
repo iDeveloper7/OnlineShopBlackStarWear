@@ -8,6 +8,10 @@
 import UIKit
 import BadgeSwift
 
+protocol CountBadgeDelegate {
+    func countBadge(count: Int)
+}
+
 class ProductCardVC: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -24,6 +28,7 @@ class ProductCardVC: UIViewController {
     let cartButton = UIButton(type: .roundedRect) //кнопка "перейти в корзину"
     let badge = BadgeSwift()
     var countItemInCart = 0 //кол-во товаров в корзине для badge
+    var countDelegate: CountBadgeDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +39,11 @@ class ProductCardVC: UIViewController {
         tableViewSettings()
         createCartButton()
         createBadge()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        badge.text = "\(countItemInCart)"
     }
     
     //MARK: - create button add to cart  кнопка "Добавить в корзину"
@@ -84,6 +94,7 @@ class ProductCardVC: UIViewController {
     }
     @objc func backActionButton(sender: UIButton){
         dismiss(animated: true, completion: nil)
+        countDelegate?.countBadge(count: countItemInCart)
     }
     
     //MARK: - create button cart Создаем кнопку "Корзина"
@@ -126,8 +137,31 @@ class ProductCardVC: UIViewController {
         //position badge
         constraintsToBadge()
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "segueCart", let destination = segue.destination as? CartVC{
+            destination.countItemDelegate = self
+            destination.countItemZeroDelegate = self
+        }
+    }
 }
-extension ProductCardVC: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate{
+extension ProductCardVC: CountItemBadgeInZero, CountItemBadgeDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITableViewDataSource, UITableViewDelegate{
+    //MARK: - CountItemBadgeInZero (при покупке товаров в корзине)
+    func countItemBadgeInZero(count: Int) {
+        self.countItemInCart = count
+        badge.isHidden = true
+    }
+    
+    //MARK: - CountItemBadgeDelegate
+    func countItemBadgeDelegate(count: Int) {
+        self.countItemInCart = count
+        if count == 0{
+            badge.isHidden = true
+        } else {
+            badge.isHidden = false
+        }
+    }
+    
     //MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         dataProduct.offers.count

@@ -65,16 +65,25 @@ class CategoryVC: UIViewController {
             backButtonOutlet.isEnabled = false
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.badgeCount.text = "\(countBadge)"
+    }
+    
     //settings navigation bar
     private func setupNavBar(){
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationItem.rightBarButtonItems?.append(UIBarButtonItem(customView: cartButton))
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = .darkGray
     }
     //переход на экран корзины
     @IBAction func goToCart(_ sender: UIButton) {
-        guard let vc = storyboard?.instantiateViewController(identifier: "CartVC") else { return }
-        navigationController?.pushViewController(vc, animated: true)
+        let vc = storyboard?.instantiateViewController(identifier: "CartVC") as! CartVC
+        vc.countItemDelegate = self
+        vc.countItemZeroDelegate = self
+        present(vc, animated: true, completion: nil)
     }
     
     //вернуться назад
@@ -87,7 +96,34 @@ class CategoryVC: UIViewController {
     }
 }
 
-extension CategoryVC: UITableViewDataSource, UITableViewDelegate{
+extension CategoryVC: CountItemBadgeInZero, CountBadgeProductVCDelegate, CountItemBadgeDelegate, UITableViewDataSource, UITableViewDelegate{
+    //MARK: - CountItemBadgeInZero (при покупке товаров в корзине)
+    func countItemBadgeInZero(count: Int) {
+        self.countBadge = count
+        badgeCount.isHidden = true
+    }
+    
+    //MARK: - CountBadgeProductVCDelegate (делегат из productVC)
+    func countBadgeProductVCDelegate(count: Int) {
+        self.countBadge = count
+        if count == 0{
+            badgeCount.isHidden = true
+        } else {
+            badgeCount.isHidden = false
+        }
+    }
+    
+    //MARK: - CountItemBadgeDelegate (делегат из корзины)
+    func countItemBadgeDelegate(count: Int) {
+        self.countBadge = count
+        if count == 0{
+            badgeCount.isHidden = true
+        } else {
+            badgeCount.isHidden = false
+        }
+        print("count item categoryVC \(count)")
+    }
+    
     //MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return !subCategoryes.isEmpty ? subCategoryes.count : categories.count
@@ -132,16 +168,20 @@ extension CategoryVC: UITableViewDataSource, UITableViewDelegate{
             print("Переход на подкатегории")
         } else if tableIndex == 0 && categories[indexPath.row].subcategories.isEmpty{
             let vc = storyboard?.instantiateViewController(identifier: "ProductVC") as! ProductVC
+            vc.countProductVCDelegate = self
             vc.productId = Int(categoriesId[indexPath.row])!
             vc.nameProduct = categories[indexPath.row].name
             navigationController?.pushViewController(vc, animated: true)
             print("переход на продукты без подкатегорий")
         } else{
             let vc = storyboard?.instantiateViewController(identifier: "ProductVC") as! ProductVC
+            vc.countProductVCDelegate = self
             vc.nameProduct = subCategoryes[indexPath.row].name
             vc.productId = subCategoryes[indexPath.row].id
             navigationController?.pushViewController(vc, animated: true)
             print("переход на продукты")
         }
     }
+    //Для возвращения в данный VC из корзины
+    @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {}
 }
